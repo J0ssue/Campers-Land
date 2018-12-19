@@ -4,6 +4,7 @@ const express		 = require('express'),
 			PORT 			 = 3000,  
 			mongoose 	 = require('mongoose');
 
+// mongoose.connect creates the new collection inside data dir:
 mongoose.connect('mongodb://localhost/campers_land');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -11,42 +12,28 @@ app.set('view engine', 'ejs');
 
 // SCHEMA SETUP
 const campgroundSchema = new mongoose.Schema({
-	name: String,
-	image: String,
+	name: String,//expects name string
+	image: String,//expects image string
 }); 
 
+// starts the Campground schema:
 const Campground = mongoose.model('Campground', campgroundSchema);
 
-Campground.create(
-	{
-		name: 'Granite Hill',
-		image: '//images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
-	}, (err, campground) => {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log('NEWLY CREATED CAMPGROUND');
-					console.log(campground);
-				}
-	   }
-);
+// creates new campgrounds with Campground class, takes in two parameters one for the new campground and another one is a callback for err handling and success handling:
+// Campground.create(
+// 	{
+// 		name: 'Hanging Trees',
+// 		image: 'https://images.unsplash.com/photo-1519095614420-850b5671ac7f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+// 	}, (err, campground) => {
+// 				if (err) {
+// 					console.log(err);
+// 				} else {
+// 					console.log('NEWLY CREATED CAMPGROUND');
+// 					console.log(campground);
+// 				}
+// 	   }
+// );
 
-
-
-
-const campgrounds = [
-		{ name: 'Salmon Creek', img: 'fire.jpg' },
-		{ name: 'Granite Hill', img: 'lake1.jpg' },
-		{ name: 'Mountain Goat', img: 'lake2.jpg' },
-
-		{ name: 'Salmon Creek', img: 'fire.jpg' },
-		{ name: 'Granite Hill', img: 'lake1.jpg' },
-		{ name: 'Mountain Goat', img: 'lake2.jpg' },
-
-		{ name: 'Salmon Creek', img: 'fire.jpg' },
-		{ name: 'Granite Hill', img: 'lake1.jpg' },
-		{ name: 'Mountain Goat', img: 'lake2.jpg' },
-];
 
 // Route to Home Page:
 app.get('/', (req, res) => {
@@ -55,7 +42,15 @@ app.get('/', (req, res) => {
 
 // Route to Campgrounds Page:
 app.get('/campgrounds', (req, res) => {
-	res.render('campgrounds', { campgrounds });
+	// Get all campgrounds from DB
+	Campground.find({}, (err, allCampgrounds) => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render('campgrounds', { campgrounds:allCampgrounds });
+		}
+	});
+	// res.render('campgrounds', { campgrounds });
 });
 
 // Post Route 'sends information':

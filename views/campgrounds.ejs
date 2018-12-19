@@ -14,11 +14,11 @@
 			<div class="col-md-12">
 				<h3>My Favourite Campgrounds</h3>
 			</div>
-			<% campgrounds.forEach((img) => { %>
+			<% campgrounds.forEach((image) => { %>
 				<div class="col-xlg-2 col-lg-3 col-md-6">
 					<figure class="figure text-center">
-						<img src="<%= img.img %>" alt="image" class="figure-img rounded" width="220" height="250">
-						<figcaption class="figure-caption"><h4><%= img.name %></h4></figcaption>
+						<img src="<%= image.image %>" alt="image" class="figure-img rounded" width="220" height="250">
+						<figcaption class="figure-caption"><h4><%= image.name %></h4></figcaption>
 					</figure>
 				</div>
 			<% }) %>
