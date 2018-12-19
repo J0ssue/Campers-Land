@@ -57,11 +57,17 @@ app.get('/campgrounds', (req, res) => {
 app.post('/campgrounds', (req, res) => {
 	// get data from form and add to campgrounds array
 	let name = req.body.name;
-	let img =	req.body.img;
-	const newCampground = { name, img };
-	campgrounds.push(newCampground);
-	// redirect back to campgrounds page
-	res.redirect("/campgrounds");
+	let image =	req.body.image;
+	const newCampground = { name, image };
+	// Create a new campground and save to DB:
+	Campground.create(newCampground, (err, newlyCreated) => {
+		if (err) {
+			console.log(err);
+		} else {
+			// redirect to campgrounds page:
+			res.redirect('/campgrounds');
+		}
+	});
 });
 
 app.get('/campgrounds/new', (req, res) => {
