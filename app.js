@@ -1,11 +1,38 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const PORT = 3000; 
+const express		 = require('express'), 
+			app 			 = express(),
+			bodyParser = require('body-parser'), 
+			PORT 			 = 3000,  
+			mongoose 	 = require('mongoose');
 
+mongoose.connect('mongodb://localhost/campers_land');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+
+// SCHEMA SETUP
+const campgroundSchema = new mongoose.Schema({
+	name: String,
+	image: String,
+}); 
+
+const Campground = mongoose.model('Campground', campgroundSchema);
+
+Campground.create(
+	{
+		name: 'Granite Hill',
+		image: '//images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+	}, (err, campground) => {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log('NEWLY CREATED CAMPGROUND');
+					console.log(campground);
+				}
+	   }
+);
+
+
+
 
 const campgrounds = [
 		{ name: 'Salmon Creek', img: 'fire.jpg' },
