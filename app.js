@@ -48,7 +48,7 @@ app.get('/campgrounds', (req, res) => {
 		if (err) {
 			console.log(err);
 		} else {
-			res.render('campgrounds', { campgrounds: allCampgrounds });
+			res.render('index', { campgrounds: allCampgrounds });
 		}
 	});
 	// res.render('campgrounds', { campgrounds });
@@ -57,9 +57,10 @@ app.get('/campgrounds', (req, res) => {
 // CREATE: Add new campground to DB.
 app.post('/campgrounds', (req, res) => {
 	// get data from form and add to campgrounds array
-	let name = req.body.name;
-	let image = req.body.image;
-	const newCampground = { name, image };
+	let name 				= req.body.name,
+			image 			= req.body.image,
+			description = req.body.description;
+	const newCampground = { name, image, description };
 	// Create a new campground and save to DB:
 	Campground.create(newCampground, (err, newlyCreated) => {
 		if (err) {
@@ -79,8 +80,14 @@ app.get('/campgrounds/new', (req, res) => {
 // SHOW: shows info about one campground;
 app.get('/campgrounds/:id', (req, res) => {
 	// find the campground with provided ID
-	// render show template with that campground
-	res.send('This will be the show page one day');
+	Campground.findById(req.params.id, (err, foundCampground) => {
+		if (err) {
+			console.log(err);
+		} else {
+			// render show template with that campground
+			res.render('show', { campground: foundCampground });
+		}
+	});
 });
 
 app.listen(PORT, () => {
