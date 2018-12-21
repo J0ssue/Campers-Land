@@ -1,8 +1,8 @@
-const express		 = require('express'), 
-			app 			 = express(),
-			bodyParser = require('body-parser'), 
-			PORT 			 = 3000,  
-			mongoose 	 = require('mongoose');
+const express = require('express'),
+	app = express(),
+	bodyParser = require('body-parser'),
+	PORT = 3000,
+	mongoose = require('mongoose');
 
 // mongoose.connect creates the new collection inside data dir:
 mongoose.connect('mongodb://localhost/campers_land');
@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 const campgroundSchema = new mongoose.Schema({
 	name: String,//expects name string
 	image: String,//expects image string
-}); 
+});
 
 // starts the Campground schema:
 const Campground = mongoose.model('Campground', campgroundSchema);
@@ -47,7 +47,7 @@ app.get('/campgrounds', (req, res) => {
 		if (err) {
 			console.log(err);
 		} else {
-			res.render('campgrounds', { campgrounds:allCampgrounds });
+			res.render('campgrounds', { campgrounds: allCampgrounds });
 		}
 	});
 	// res.render('campgrounds', { campgrounds });
@@ -57,7 +57,7 @@ app.get('/campgrounds', (req, res) => {
 app.post('/campgrounds', (req, res) => {
 	// get data from form and add to campgrounds array
 	let name = req.body.name;
-	let image =	req.body.image;
+	let image = req.body.image;
 	const newCampground = { name, image };
 	// Create a new campground and save to DB:
 	Campground.create(newCampground, (err, newlyCreated) => {
