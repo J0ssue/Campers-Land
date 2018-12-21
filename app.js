@@ -14,6 +14,7 @@ app.set('view engine', 'ejs');
 const campgroundSchema = new mongoose.Schema({
 	name: String,//expects name string
 	image: String,//expects image string
+	description: String, // ''
 });
 
 // starts the Campground schema:
@@ -24,6 +25,7 @@ const Campground = mongoose.model('Campground', campgroundSchema);
 // 	{
 // 		name: 'Hanging Trees',
 // 		image: 'https://images.unsplash.com/photo-1519095614420-850b5671ac7f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+// 		description: 'This is a Huge granite hill.',
 // 	}, (err, campground) => {
 // 				if (err) {
 // 					console.log(err);
@@ -33,7 +35,6 @@ const Campground = mongoose.model('Campground', campgroundSchema);
 // 				}
 // 	   }
 // );
-
 
 // Route to Home Page:
 app.get('/', (req, res) => {
@@ -73,6 +74,13 @@ app.post('/campgrounds', (req, res) => {
 // NEW: show form to create new campground.
 app.get('/campgrounds/new', (req, res) => {
 	res.render('new.ejs');
+});
+
+// SHOW: shows info about one campground;
+app.get('/campgrounds/:id', (req, res) => {
+	// find the campground with provided ID
+	// render show template with that campground
+	res.send('This will be the show page one day');
 });
 
 app.listen(PORT, () => {
