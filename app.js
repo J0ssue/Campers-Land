@@ -1,11 +1,11 @@
-const express = require('express'),
-	app = express(),
-	bodyParser = require('body-parser'),
-	PORT = 3000,
-	mongoose = require('mongoose');
+const express 	 = require('express'),
+			app 			 = express(),
+			bodyParser = require('body-parser'),
+			PORT 		 	 = 3000,
+			mongoose 	 = require('mongoose');
 
 // mongoose.connect creates the new collection inside data dir:
-mongoose.connect('mongodb://localhost/campers_land');
+mongoose.connect('mongodb://localhost:27017/campers_land', { useNewUrlParser: true });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 	res.render('landing');
 });
 
-// Route to Campgrounds Page:
+// INDEX: Ahow all Campgrounds.
 app.get('/campgrounds', (req, res) => {
 	// Get all campgrounds from DB
 	Campground.find({}, (err, allCampgrounds) => {
@@ -53,7 +53,7 @@ app.get('/campgrounds', (req, res) => {
 	// res.render('campgrounds', { campgrounds });
 });
 
-// Post Route 'sends information':
+// CREATE: Add new campground to DB.
 app.post('/campgrounds', (req, res) => {
 	// get data from form and add to campgrounds array
 	let name = req.body.name;
@@ -70,6 +70,7 @@ app.post('/campgrounds', (req, res) => {
 	});
 });
 
+// NEW: show form to create new campground.
 app.get('/campgrounds/new', (req, res) => {
 	res.render('new.ejs');
 });
