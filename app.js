@@ -17,22 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
-// creates new campgrounds with Campground class, takes in two parameters one for the new campground and another one is a callback for err handling and success handling:
-// Campground.create(
-// 	{
-// 		name: 'Hanging Trees',
-// 		image: 'https://images.unsplash.com/photo-1519095614420-850b5671ac7f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
-// 		description: 'This is a Huge granite hill.',
-// 	}, (err, campground) => {
-// 				if (err) {
-// 					console.log(err);
-// 				} else {
-// 					console.log('NEWLY CREATED CAMPGROUND');
-// 					console.log(campground);
-// 				}
-// 	   }
-// );
-
 // Route to Home Page:
 app.get('/', (req, res) => {
   res.render('landing');
@@ -76,15 +60,17 @@ app.get('/campgrounds/new', (req, res) => {
 
 // SHOW: shows info about one campground;
 app.get('/campgrounds/:id', (req, res) => {
-  // find the campground with provided ID
-  Campground.findById(req.params.id, (err, foundCampground) => {
-    if (err) {
-      console.log(err);
-    } else {
-      // render show template with that campground
-      res.render('show', { campground: foundCampground });
-    }
-  });
+  // find the campground with provided ID:
+  Campground.findById(req.params.id)
+    .populate('comments')
+    .exec(function(err, foundCampground) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(foundCampground);
+        res.render('show', { campground: foundCampground });
+      }
+    });
 });
 
 app.listen(PORT, () => {

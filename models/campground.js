@@ -7,7 +7,7 @@ const campgroundSchema = new mongoose.Schema({
   description: String,
   comments: [
     {
-      type: mongooose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Comment'
     }
   ]
