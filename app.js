@@ -2,9 +2,12 @@ const bodyParser = require('body-parser'),
   Campground = require('./models/campground'),
   mongoose = require('mongoose'),
   express = require('express'),
+  seedDB = require('./seeds'),
   app = express(),
   PORT = 3000;
 
+// seeds the database
+seedDB();
 // mongoose.connect creates the new collection inside data dir:
 mongoose.connect(
   'mongodb://localhost:27017/campers_land',
