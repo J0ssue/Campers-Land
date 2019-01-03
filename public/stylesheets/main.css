@@ -1,0 +1,12 @@
+/* body {
+  background-color: purple; */
+/* } */
+
+.img-thumbnail img.img-fluid {
+  width: 100%;
+}
+
+/* removes the padding around images inside the img-thumbnail div */
+.img-thumbnail {
+  padding: 0;
+}
