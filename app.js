@@ -1,9 +1,12 @@
 const bodyParser = require('body-parser'),
   Campground = require('./models/campground'),
   Comment = require('./models/comment'),
+  passport = require('passport'),
+  LocalStrategy = require('passport-local'),
   mongoose = require('mongoose'),
   express = require('express'),
   seedDB = require('./seeds'),
+  User = require('./models/user'),
   app = express(),
   PORT = 3000;
 
