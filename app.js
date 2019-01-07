@@ -15,10 +15,26 @@ mongoose.connect(
   'mongodb://localhost:27017/campers_land',
   { useNewUrlParser: true }
 );
+
+// APP CONFIG:
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 seedDB(); //seeds the DB
+
+// PASSPORT(AUTH) CONFIG:
+app.use(
+  require('express-session')({
+    secret: 'hello world',
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Route to Home Page:
 app.get('/', (req, res) => {
