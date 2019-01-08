@@ -8,6 +8,7 @@ const bodyParser = require('body-parser'),
   seedDB = require('./seeds'),
   User = require('./models/user'),
   app = express(),
+  commentRoutes = require('./routes/comments'),
   PORT = 3000;
 
 // mongoose.connect creates the new collection inside data dir:
@@ -36,6 +37,12 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// passing user as middleware to be able to display Currently logged in User's info!:
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 // Route to Home Page:
 app.get('/', (req, res) => {
   res.render('landing');
@@ -44,11 +51,11 @@ app.get('/', (req, res) => {
 // INDEX: Ahow all Campgrounds.
 app.get('/campgrounds', (req, res) => {
   // Get all campgrounds from DB
-  Campground.find({}, (err, allCampgrounds) => {
+  Campground.find({}, (err, campgrounds) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('campgrounds/index', { campgrounds: allCampgrounds });
+      res.render('campgrounds/index', { campgrounds });
     }
   });
   // res.render('campgrounds', { campgrounds });
@@ -95,7 +102,7 @@ app.get('/campgrounds/:id', (req, res) => {
 // ==========================
 // COMMENTS ROUTES
 // ==========================
-app.get('/campgrounds/:id/comments/new', (req, res) => {
+app.get('/campgrounds/:id/comments/new', isLoggedIn, (req, res) => {
   // find campground by id
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
@@ -106,7 +113,7 @@ app.get('/campgrounds/:id/comments/new', (req, res) => {
   });
 });
 
-app.post('/campgrounds/:id/comments', (req, res) => {
+app.post('/campgrounds/:id/comments', isLoggedIn, (req, res) => {
   // lookup campground using id:
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
@@ -156,6 +163,30 @@ app.post('/register', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('login');
 });
+
+// handling login logic:
+app.post(
+  '/login',
+  passport.authenticate('local', {
+    successRedirect: '/campgrounds',
+    failureRedirect: '/login'
+  }),
+  (req, res) => {}
+);
+
+// LOGOUT LOGIC:
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+// MIDDLEWARE:
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+}
 
 app.listen(PORT, () => {
   console.log('App Running in localhost:3000');
