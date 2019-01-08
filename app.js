@@ -129,6 +129,34 @@ app.post('/campgrounds/:id/comments', (req, res) => {
   });
 });
 
+// ===============
+// AUTH ROUTES:
+// ==============
+
+// REGISTER ROUTES:
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+// handle register logic:
+app.post('/register', (req, res) => {
+  const newUser = new User({ username: req.body.username });
+  User.register(newUser, req.body.password, (err, user) => {
+    if (err) {
+      console.log(err);
+      return res.render('register');
+    }
+    passport.authenticate('local')(req, res, () => {
+      res.redirect('/campgrounds');
+    });
+  });
+});
+
+// LOGIN ROUTES:
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
 app.listen(PORT, () => {
   console.log('App Running in localhost:3000');
 });
