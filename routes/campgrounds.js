@@ -20,8 +20,12 @@ router.post('/', isLoggedIn, (req, res) => {
   // get data from form and add to campgrounds array
   let name = req.body.name,
     image = req.body.image,
-    description = req.body.description;
-  const newCampground = { name, image, description };
+    description = req.body.description,
+    author = {
+      id: req.user._id,
+      username: req.user.username
+    };
+  const newCampground = { name, image, description, author };
   // Create a new campground and save to DB:
   Campground.create(newCampground, (err, newlyCreated) => {
     if (err) {
@@ -47,7 +51,6 @@ router.get('/:id', (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(foundCampground);
         res.render('campgrounds/show', { campground: foundCampground });
       }
     });
