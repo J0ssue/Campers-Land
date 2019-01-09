@@ -2,6 +2,7 @@ const bodyParser = require('body-parser'),
   Campground = require('./models/campground'),
   Comment = require('./models/comment'),
   passport = require('passport'),
+  methodOverride = require('method-override'),
   LocalStrategy = require('passport-local'),
   mongoose = require('mongoose'),
   express = require('express'),
@@ -25,6 +26,7 @@ mongoose.connect(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
+app.use(methodOverride('_method'));
 
 // seedDB(); //seeds the DB
 

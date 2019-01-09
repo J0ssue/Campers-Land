@@ -18,8 +18,15 @@
           <h4><a href="/"><%= campground.name %></a></h4>
           <h4>$9.00/night</h4>
         </div>
-        <p class="card-body"><%= campground.description %></p>
-        <p><em> Submitted By <%= campground.author.username %> </em></p>
+        <div class="card-body">
+          <p><%= campground.description %></p>
+          <p><em> Submitted By <%= campground.author.username %> </em></p>
+          <a
+            class="btn btn-warning"
+            href="/campgrounds/<%= campground._id %>/edit"
+            >Edit</a
+          >
+        </div>
       </div>
       <div class="bg-secondary card-body mt-4">
         <div class="text-right mb-4">
