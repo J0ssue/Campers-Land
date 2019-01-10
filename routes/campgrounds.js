@@ -91,6 +91,7 @@ router.delete('/:id', authorizationProtocol, (req, res) => {
   });
 });
 
+// AUTHENTICATION MIDDLEWARE:
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -98,6 +99,7 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
+// AUTHORIZATION MIDDLEWARE:
 function authorizationProtocol(req, res, next) {
   if (req.isAuthenticated()) {
     Campground.findById(req.params.id, (err, campground) => {
