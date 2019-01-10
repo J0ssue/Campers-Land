@@ -64,7 +64,7 @@ router.get('/:id/edit', authorizationProtocol, (req, res) => {
 });
 
 // UPDATE:
-router.put('/:id', (req, res) => {
+router.put('/:id', authorizationProtocol, (req, res) => {
   // find and update correct campground:
   Campground.findByIdAndUpdate(
     req.params.id,
@@ -81,7 +81,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DESTROY:
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authorizationProtocol, (req, res) => {
   Campground.findByIdAndRemove(req.params.id, err => {
     if (err) {
       res.redirect('/campgrounds');
