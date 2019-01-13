@@ -46,7 +46,7 @@ router.post('/', isLoggedIn, (req, res) => {
 });
 
 // EDIT:
-router.get('/:comment_id/edit', (req, res) => {
+router.get('/:comment_id/edit', checkCommentOwnership, (req, res) => {
   Comment.findById(req.params.comment_id, (err, comment) => {
     if (err) {
       res.redirect('back');
@@ -57,7 +57,7 @@ router.get('/:comment_id/edit', (req, res) => {
 });
 
 // UPDATE:
-router.put('/:comment_id', (req, res) => {
+router.put('/:comment_id', checkCommentOwnership, (req, res) => {
   Comment.findByIdAndUpdate(
     req.params.comment_id,
     req.body.comment,
@@ -72,8 +72,7 @@ router.put('/:comment_id', (req, res) => {
 });
 
 // DESTROY:
-router.delete('/:comment_id', (req, res) => {
-  console.log(req.params);
+router.delete('/:comment_id', checkCommentOwnership, (req, res) => {
   Comment.findByIdAndRemove(req.params.comment_id, err => {
     if (err) {
       res.redirect('back');
@@ -91,4 +90,32 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
+// AUTHORIZATION MIDDLEWARE:
+function checkCommentOwnership(req, res, next) {
+  if (req.isAuthenticated()) {
+    Comment.findById(req.params.comment_id, (err, foundComment) => {
+      if (err) {
+        res.redirect('back');
+      } else {
+        // does user own comment:
+        if (foundComment.author.id.equals(req.user._id)) {
+          next();
+        } else {
+          // otherwise, redirect:
+          res.redirect('back');
+        }
+      }
+    });
+  } else {
+    res.redirect('back');
+  }
+}
+
 module.exports = router;
+
+// APP BUILDING PROCESS:
+// 1 - have an idea
+// 2 - check design pattern websites for ideas
+// 3 - write down how to implement ideas on a site
+// 4 - draw a layout according to your implementation ideas
+// 5 - code your site, reiterate to step 3 if something does not match expectations.
