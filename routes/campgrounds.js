@@ -1,6 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const Campground = require('../models/campground');
+const express = require('express'),
+  router = express.Router(),
+  Campground = require('../models/campground'),
+  middleware = require('../middleware');
 
 // INDEX: Ahow all Campgrounds.
 router.get('/', (req, res) => {
@@ -16,7 +17,7 @@ router.get('/', (req, res) => {
 });
 
 // CREATE: Add new campground to DB.
-router.post('/', isLoggedIn, (req, res) => {
+router.post('/', middleware.isLoggedIn, (req, res) => {
   // get data from form and add to campgrounds array
   let name = req.body.name,
     image = req.body.image,
@@ -38,7 +39,7 @@ router.post('/', isLoggedIn, (req, res) => {
 });
 
 // NEW: show form to create new campground.
-router.get('/new', isLoggedIn, (req, res) => {
+router.get('/new', middleware.isLoggedIn, (req, res) => {
   res.render('campgrounds/new');
 });
 
@@ -57,14 +58,14 @@ router.get('/:id', (req, res) => {
 });
 
 // EDIT:
-router.get('/:id/edit', authorizationProtocol, (req, res) => {
+router.get('/:id/edit', middleware.checkCampgroundOwnership, (req, res) => {
   Campground.findById(req.params.id, (err, campground) => {
     res.render('campgrounds/edit', { campground });
   });
 });
 
 // UPDATE:
-router.put('/:id', authorizationProtocol, (req, res) => {
+router.put('/:id', middleware.checkCampgroundOwnership, (req, res) => {
   // find and update correct campground:
   Campground.findByIdAndUpdate(
     req.params.id,
@@ -81,7 +82,7 @@ router.put('/:id', authorizationProtocol, (req, res) => {
 });
 
 // DESTROY:
-router.delete('/:id', authorizationProtocol, (req, res) => {
+router.delete('/:id', middleware.checkCampgroundOwnership, (req, res) => {
   Campground.findByIdAndRemove(req.params.id, err => {
     if (err) {
       res.redirect('/campgrounds');
@@ -90,34 +91,5 @@ router.delete('/:id', authorizationProtocol, (req, res) => {
     }
   });
 });
-
-// AUTHENTICATION MIDDLEWARE:
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
-}
-
-// AUTHORIZATION MIDDLEWARE:
-function authorizationProtocol(req, res, next) {
-  if (req.isAuthenticated()) {
-    Campground.findById(req.params.id, (err, campground) => {
-      if (err) {
-        res.redirect('back');
-      } else {
-        // does user own campground:
-        if (campground.author.id.equals(req.user._id)) {
-          next();
-        } else {
-          // otherwise, redirect:
-          res.redirect('back');
-        }
-      }
-    });
-  } else {
-    res.redirect('back');
-  }
-}
 
 module.exports = router;
