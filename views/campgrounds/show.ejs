@@ -16,7 +16,7 @@
         <img class="img-fluid" src="<%= campground.image %>" alt="image" />
         <div class="figure-caption d-flex justify-content-between card-body">
           <h4><a href="/"><%= campground.name %></a></h4>
-          <h4>$9.00/night</h4>
+          <h4>$<%= campground.price %>/night</h4>
         </div>
         <div class="card-body">
           <p><%= campground.description %></p>
