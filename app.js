@@ -18,8 +18,12 @@ const campgroundRoutes = require('./routes/campgrounds'),
   indexRoutes = require('./routes/index');
 
 // CONNETING DATABASE:
+// mongoose.connect(
+//   'mongodb://localhost:27017/campers_land',
+//   { useNewUrlParser: true }
+// );
 mongoose.connect(
-  'mongodb://localhost:27017/campers_land',
+  'mongodb://jdiaz66:hello1234@ds159634.mlab.com:59634/campersland',
   { useNewUrlParser: true }
 );
 
