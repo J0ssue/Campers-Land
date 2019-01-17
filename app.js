@@ -10,7 +10,7 @@ const bodyParser = require('body-parser'),
   seedDB = require('./seeds'),
   User = require('./models/user'),
   app = express(),
-  PORT = 3000;
+  PORT = process.env.PORT || 3000;
 
 // REQUIRING ROUTES:
 const campgroundRoutes = require('./routes/campgrounds'),
