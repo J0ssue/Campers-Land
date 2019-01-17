@@ -1,6 +1,6 @@
-/* body {
-  background-color: purple; */
-/* } */
+body {
+  height: 100hv;
+ }
 
 .img-thumbnail img.img-fluid {
   width: 100%;
@@ -13,4 +13,8 @@
 
 .delete-form {
   display: inline;
+}
+
+footer {
+  padding: 30px;
 }
