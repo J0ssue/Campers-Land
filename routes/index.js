@@ -18,7 +18,7 @@ router.post('/register', (req, res) => {
   const newUser = new User({ username: req.body.username });
   User.register(newUser, req.body.password, (err, user) => {
     if (err) {
-      return res.render('register', { error: err.message });
+      return res.render('register', { error: err });
     }
     passport.authenticate('local')(req, res, () => {
       req.flash('success', 'Welcome to Campers Land ' + user.username);

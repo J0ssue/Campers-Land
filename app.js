@@ -10,7 +10,8 @@ const bodyParser = require('body-parser'),
   seedDB = require('./seeds'),
   User = require('./models/user'),
   app = express(),
-  PORT = process.env.PORT || 3000;
+  PORT = process.env.PORT || 3000,
+  URL = process.env.DATABASEURL || 'mongodb://localhost:27017/campers_land';
 
 // REQUIRING ROUTES:
 const campgroundRoutes = require('./routes/campgrounds'),
@@ -19,7 +20,7 @@ const campgroundRoutes = require('./routes/campgrounds'),
 
 // CONNETING DATABASE:
 mongoose.connect(
-  process.env.DATABASEURL,
+  URL,
   { useNewUrlParser: true }
 );
 
@@ -27,10 +28,6 @@ mongoose.connect(
 
 // mongoose.connect(
 //   'mongodb://localhost:27017/campers_land',
-//   { useNewUrlParser: true }
-// );
-// mongoose.connect(
-//   'mongodb://jdiaz66:hello1234@ds159634.mlab.com:59634/campersland',
 //   { useNewUrlParser: true }
 // );
 
