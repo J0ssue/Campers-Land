@@ -22,7 +22,6 @@ router.post('/', middleware.isLoggedIn, (req, res) => {
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
       req.flash('Something went wrong');
-      console.log(err);
       res.redirect('/campgrounds');
     } else {
       // create new comment
@@ -54,6 +53,7 @@ router.get(
   (req, res) => {
     Comment.findById(req.params.comment_id, (err, comment) => {
       if (err) {
+        req.flash('error', err);
         res.redirect('back');
       } else {
         res.render('comments/edit', { campground_id: req.params.id, comment });
@@ -69,8 +69,10 @@ router.put('/:comment_id', middleware.checkCommentOwnership, (req, res) => {
     req.body.comment,
     (err, comment) => {
       if (err) {
+        req.flash('error', err);
         res.redirect('back');
       } else {
+        req.flash('success', 'Successfully updated comment!');
         res.redirect(`/campgrounds/${req.params.id}`);
       }
     }
@@ -81,6 +83,7 @@ router.put('/:comment_id', middleware.checkCommentOwnership, (req, res) => {
 router.delete('/:comment_id', middleware.checkCommentOwnership, (req, res) => {
   Comment.findByIdAndRemove(req.params.comment_id, err => {
     if (err) {
+      req.flash('error', err);
       res.redirect('back');
     } else {
       req.flash('success', 'Comment Deleted');
